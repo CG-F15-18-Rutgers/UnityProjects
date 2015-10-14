@@ -1,14 +1,22 @@
 #Group Name
 ######Unity Projects - CG Fall 2015 @ Rutgers
-######By: *[Leader], [Member1], [Member2], [Member3]*
+######By: Jon Walch, Basil Ahmad, Kevin Albertson, Ananth Rao
 Check out our website: [Group Name Website](https://www.google.com "Google's Homepage!")
 
 ![alt text](teamLogo.png)
 
 ###B1: Navigation and Animation
-1. I am a fun project!
-2. Features
-3. Description
+#### Notes ####
+Move the camera with WASD and E to raise, Q to lower.
+
+#### Status ####
+
+##### Part 1 #####
+Almost complete. Here's what's left:
+- Add some more obstacles which carve the navmesh (right now only one wall does).
+- The first extra credit (number 10), which should be relatively straightforward.
+- Answer the questions
+- Publish this part
 
 ###B2: Inverse Kinematics
 1. I am a hard project!
