@@ -12,11 +12,7 @@ Move the camera with WASD and E to raise, Q to lower.
 #### Status ####
 
 ##### Part 1 #####
-Almost complete. Here's what's left:
-- Add some more obstacles which carve the navmesh (right now only one wall does).
-- The first extra credit (number 10), which should be relatively straightforward.
-- Answer the questions
-- Publish this part
+Complete.
 
 ###B2: Inverse Kinematics
 1. I am a hard project!
