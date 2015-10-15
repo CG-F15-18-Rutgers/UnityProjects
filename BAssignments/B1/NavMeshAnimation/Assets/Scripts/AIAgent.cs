@@ -4,7 +4,6 @@ using System.Collections;
 public class AIAgent : MonoBehaviour {
 
     private NavMeshAgent navMeshAgent;
-    private Rigidbody rigidBody;
     private bool selected = false;
 
     void Start()
@@ -20,11 +19,6 @@ public class AIAgent : MonoBehaviour {
     public void moveTo(Vector3 position)
     {
         navMeshAgent.destination = position;
-    }
-
-    public Rigidbody getRigidbody()
-    {
-        return rigidBody;
     }
 
     public Transform getTransform()
