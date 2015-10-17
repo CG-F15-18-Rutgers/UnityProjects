@@ -17,10 +17,9 @@ Complete.
 ##### Part 2 #####
 Currently, I imported the mecanim data and went through some of the animation controller documentation (http://docs.unity3d.com/Manual/AnimatorControllers.html). The imported mecanim data is in the directories 'Locomotion Setup' and 'Raw Mocap Data'. They contain the raw animation files as well as the data for the example character.
 
-All we need to do is wire together the animations to create walk, run, and jump animations. However, I'm stuck on the jump animation. The code I added for the character is in the root asset directory, named AIAgentLocomotion.cs, and the animation controller is AIAgentLocomotion.controller. The scene with the character is in Scenes/scene2.unity.
+The code I added for the character is in the root asset directory, named AIAgentLocomotion.cs, and the animation controller is AIAgentLocomotion.controller. The scene with the character is in Scenes/scene2.unity.
 
 Here's what's left:
-- Jump animation and code integration
 - Camera following
 - Make character a prefab
 - Deploy

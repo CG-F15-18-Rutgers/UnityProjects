@@ -40,6 +40,14 @@ public class AIAgentLocomotion : MonoBehaviour {
             speed = 2;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            animator.SetBool("Jumping", true);
+        } else
+        {
+            animator.SetBool("Jumping", false);
+        }
+
         animator.SetFloat("Speed", speed);
         transform.eulerAngles = new Vector3(0, direction, 0);
 
