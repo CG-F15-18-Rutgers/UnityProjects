@@ -1,7 +1,7 @@
 #Group Name
 ######Unity Projects - CG Fall 2015 @ Rutgers
 ######By: Jon Walch, Basil Ahmad, Kevin Albertson, Ananth Rao
-Check out our website: [Group Name Website](https://www.google.com "Google's Homepage!")
+Check out our website: [The Fighting Mongeese](https://cgf1518rutgers.wordpress.com/ "Our Homepage!")
 
 ![alt text](teamLogo.png)
 
@@ -25,6 +25,9 @@ Here's what's left:
 - Make character a prefab
 - Deploy
 
+##### Part 4 #####
+######TODO
+Create post for this project.
 
 ###B2: Inverse Kinematics
 1. I am a hard project!
