@@ -4,3 +4,6 @@ Part 1:
 8. A non-carved obstacle is not used in preplanning. As can be seen with the roaming devils, agents may move as close as possible to the obstacle and then move around. However, when carving is used, the agent plans its initial path around the obstacle. Therefore, more realistic path planning comes with carving. However, the downside to carving is that if the agent is moving (like the roaming devils), then the navmesh has to be constantly regenerated, making it impossible for the agents to plan near the constantly changing mesh.
 9. As was discussed in class, agents can use social forces while moving. A repulsion force would be added to the agents to have a stronger outward force the closer they get to the obstacle.
 10. The roaming devil extra credit was attempted, and can be seen in the demo. As was stated, these were non-carving agents because if they were carving, it would constantly regenerate the navmesh, making it impossible for other agents to plan around it.
+
+Part 2:
+Controls are WASD. We have two different modes for controlling the third person camera, which can be toggled with the "Toggle Rotation Follow" button in the bottom left corner. When rotation following is turned on, the camera will match the rotation of the character.

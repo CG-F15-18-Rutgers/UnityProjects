@@ -34,7 +34,7 @@ public class AIAgentLocomotion : MonoBehaviour {
         } else if (Input.GetKey(KeyCode.A))
         {
             speed = 1;
-            direction = 90;
+            direction = 270;
         }
         else if (Input.GetKey(KeyCode.S))
         {
@@ -44,7 +44,7 @@ public class AIAgentLocomotion : MonoBehaviour {
         else if (Input.GetKey(KeyCode.D))
         {
             speed = 1;
-            direction = 270;
+            direction = 90;
         }
 
         if (speed == 1 && Input.GetKey(KeyCode.LeftShift))
