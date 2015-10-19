@@ -5,13 +5,25 @@ public class AIAgentLocomotion : MonoBehaviour {
 
     private Animator animator;
 
-	// Use this for initialization
-	void Start () {
+    private Vector3 lastPos = Vector3.zero;
+    private float speed = 0;
+
+    // Use this for initialization
+    void Start () {
         animator = GetComponent<Animator>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    void FixedUpdate()
+    {
+        speed = ((transform.position - lastPos).magnitude / Time.deltaTime);
+        lastPos = transform.position;
+        if(speed != 0)
+        {
+            Debug.Log(speed);
+        }
+    }
+    // Update is called once per frame
+    void Update () {
         float speed = 0;
         float direction = transform.eulerAngles.y;
 
