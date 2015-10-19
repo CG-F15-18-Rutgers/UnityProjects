@@ -7,10 +7,13 @@ public class Part3AIAgentLocomotion : MonoBehaviour {
     private Animator animator;
     private bool selected = false;
     private bool running = false;
+    private bool jumping = false;
+    private int jumpTimer = 0;
 
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        navMeshAgent.autoTraverseOffMeshLink = false;
         animator = GetComponent<Animator>();
     }
 
@@ -29,9 +32,24 @@ public class Part3AIAgentLocomotion : MonoBehaviour {
         if (navMeshAgent.isOnOffMeshLink)
         {
             animator.SetBool("Jumping", true);
+            if(!jumping)
+            {
+                jumpTimer = 70;
+            }
+            jumping = true;
         } else
         {
             animator.SetBool("Jumping", false);
+            jumping = false;
+        }
+        if(jumpTimer > 0)
+        {
+            jumpTimer--;
+            Debug.Log(jumpTimer);
+            if(jumpTimer == 0)
+            {
+                navMeshAgent.CompleteOffMeshLink();
+            }
         }
     }
 
