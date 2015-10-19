@@ -3,35 +3,62 @@ using System.Collections;
 
 public class Part3AIAgentLocomotion : MonoBehaviour {
 
+    private NavMeshAgent navMeshAgent;
     private Animator animator;
+    private bool selected = false;
+    private bool running = false;
 
-    private Vector3 lastPos = Vector3.zero;
-
-    private bool firstFrame = true;
-    private bool firstPos = true;
-
-    // Use this for initialization
     void Start()
     {
+        navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        lastPos = transform.position;
     }
 
-    void FixedUpdate()
+    // Update is called once per frame
+    void Update()
     {
-        float speed = ((transform.position - lastPos).magnitude / Time.deltaTime);
-        lastPos = transform.position;
-        if (!firstPos)
+        if (running)
         {
-            animator.SetFloat("Speed", speed);
-        }
-        if (!firstFrame && speed == 0.0 && firstPos)
+            navMeshAgent.speed = 4;
+        } else
         {
-            firstPos = false;
+            navMeshAgent.speed = 2;
         }
-        firstFrame = false;
-        float direction = transform.eulerAngles.y;
-        transform.eulerAngles = new Vector3(0, direction, 0);
+        animator.SetFloat("Speed", navMeshAgent.velocity.magnitude);
 
+        if (navMeshAgent.isOnOffMeshLink)
+        {
+            animator.SetBool("Jumping", true);
+        } else
+        {
+            animator.SetBool("Jumping", false);
+        }
+    }
+
+    public void moveTo(Vector3 position)
+    {
+        running = false;
+        navMeshAgent.destination = position;
+    }
+
+    public Transform getTransform()
+    {
+        return transform;
+    }
+
+    public void toggleSelected()
+    {
+        selected = !selected;
+        transform.Find("Indicator").gameObject.SetActive(selected);
+    }
+
+    public bool isSelected()
+    {
+        return selected;
+    }
+
+    public void unselectedClick()
+    {
+        running = true;
     }
 }
