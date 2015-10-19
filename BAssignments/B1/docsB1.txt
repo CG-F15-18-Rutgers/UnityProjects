@@ -1,7 +1,7 @@
 Blog link: https://cgf1518rutgers.wordpress.com/
 GitHub link: https://github.com/CG-F15-18-Rutgers/UnityProjects
 
-Part 1:
+Part 1 (http://kevinalbs.com/CS428/b1/part1)
 To control the camera, use the WASD keys to translate on the XZ plane, and use E to raise and Q to lower the camera.
 Click to select agents, click the world to direct them.
 
@@ -19,11 +19,19 @@ agents to have a stronger outward force the closer they get to the obstacle.
 agents because if they were carving, it would constantly regenerate the navmesh, making it impossible for other 
 agents to plan around it.
 
-Part 2:
+Part 2 (http://kevinalbs.com/CS428/b1/part2)
 Controls are the arrow keys. We have two different modes for controlling the third person camera, which can be 
 toggled with the "Toggle Rotation Follow" button in the bottom left corner. When rotation following is turned on,
 the camera will match the rotation of the character.
 
-Part 3:
+Part 3 (http://kevinalbs.com/CS428/b1/part3)
 Controls are the same as part 1, except clicking again while agents are moving will allow them to run. The jump 
 animation does occur when an agent goes on an offmesh link. However, it looks unrealistic.
+
+For additional extra credit, we made a combined game with a menu (in Assets/Scenes/Menu.unity). 
+It is located online at http://kevinalbs.com/CS428/b1/combined
+
+
+======= Extra Credit Attempt Summary =======
+- Roaming devils in part 2
+- Combined game (http://kevinalbs.com/CS428/b1/combined/)
