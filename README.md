@@ -6,23 +6,7 @@ Check out our website: [The Fighting Mongeese](https://cgf1518rutgers.wordpress.
 ![alt text](teamLogo.png)
 
 ###B1: Navigation and Animation
-#### Notes ####
-Move the camera with WASD and E to raise, Q to lower.
-
-#### Status ####
-
-##### Part 1 #####
-Complete.
-
-##### Part 2 #####
-Currently, I imported the mecanim data and went through some of the animation controller documentation (http://docs.unity3d.com/Manual/AnimatorControllers.html). The imported mecanim data is in the directories 'Locomotion Setup' and 'Raw Mocap Data'. They contain the raw animation files as well as the data for the example character.
-
-The code I added for the character is in the root asset directory, named AIAgentLocomotion.cs, and the animation controller is AIAgentLocomotion.controller. The scene with the character is in Scenes/scene2.unity.
-
-Here's what's left:
-- Camera following
-- Make character a prefab
-- Deploy
+Documentation can be found in BAssignments/B1/docsB1.txt
 
 ##### Part 4 #####
 ######TODO
