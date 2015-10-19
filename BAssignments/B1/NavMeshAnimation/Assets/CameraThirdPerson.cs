@@ -5,7 +5,7 @@ public class CameraThirdPerson : MonoBehaviour {
 
     public Transform trackingObject;
     Vector3 offset;
-    bool followRotation = false;
+    bool followRotation = true;
     // Use this for initialization
     void Start()
     {

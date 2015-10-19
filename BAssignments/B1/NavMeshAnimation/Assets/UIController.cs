@@ -6,7 +6,7 @@ public class UIController : MonoBehaviour {
 
     public Button toggleButton;
     private CameraThirdPerson cameraScript;
-    private bool rotationFollow;
+    private bool rotationFollow = true;
 	// Use this for initialization
 	void Start () {
         cameraScript = Camera.main.GetComponent<CameraThirdPerson>();

@@ -26,25 +26,21 @@ public class AIAgentLocomotion : MonoBehaviour {
     void Update () {
         float speed = 0;
         float direction = transform.eulerAngles.y;
+        float localDirection = 0;
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow))
         {
             speed = 1;
-            direction = 0;
-        } else if (Input.GetKey(KeyCode.A))
-        {
-            speed = 1;
-            direction = 270;
         }
-        else if (Input.GetKey(KeyCode.S))
+
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
-            speed = 1;
-            direction = 180;
+            localDirection = -1;
         }
-        else if (Input.GetKey(KeyCode.D))
+
+        if (Input.GetKey(KeyCode.RightArrow))
         {
-            speed = 1;
-            direction = 90;
+            localDirection = 1;
         }
 
         if (speed == 1 && Input.GetKey(KeyCode.LeftShift))
@@ -61,7 +57,12 @@ public class AIAgentLocomotion : MonoBehaviour {
         }
 
         animator.SetFloat("Speed", speed);
-        transform.eulerAngles = new Vector3(0, direction, 0);
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            localDirection += 180;
+        }
+        transform.Rotate(new Vector3(0, localDirection * Time.deltaTime * 50, 0));
 
     }
 }

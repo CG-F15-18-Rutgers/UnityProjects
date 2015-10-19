@@ -6,4 +6,4 @@ Part 1:
 10. The roaming devil extra credit was attempted, and can be seen in the demo. As was stated, these were non-carving agents because if they were carving, it would constantly regenerate the navmesh, making it impossible for other agents to plan around it.
 
 Part 2:
-Controls are WASD. We have two different modes for controlling the third person camera, which can be toggled with the "Toggle Rotation Follow" button in the bottom left corner. When rotation following is turned on, the camera will match the rotation of the character.
+Controls are the arrow keys. We have two different modes for controlling the third person camera, which can be toggled with the "Toggle Rotation Follow" button in the bottom left corner. When rotation following is turned on, the camera will match the rotation of the character.
