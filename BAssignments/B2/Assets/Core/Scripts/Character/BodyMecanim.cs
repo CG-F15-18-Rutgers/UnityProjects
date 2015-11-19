@@ -454,6 +454,14 @@ public class BodyMecanim : MonoBehaviour
 		return this.animator.GetBool ("B_Sitting");
     }
 
+	public bool SitHasFinished() {
+		return this.animator.GetCurrentAnimatorStateInfo(0).IsName ("Sitting");
+	}
+
+	public bool StandHasFinished() {
+		return this.animator.GetCurrentAnimatorStateInfo(0).IsName ("Idle");
+	}
+
     /// <summary>
     /// Returns true if and only if the character is definitely standing.
     /// </summary>

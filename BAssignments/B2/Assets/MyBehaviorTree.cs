@@ -30,13 +30,18 @@ public class MyBehaviorTree : MonoBehaviour
 		return new Sequence( participant.GetComponent<BehaviorMecanim>().Node_GoTo(position), new LeafWait(1000));
 	}
 
+	protected Node Squat() {
+		BehaviorMecanim behavior = participant.GetComponent<BehaviorMecanim> ();
+		return new Sequence (behavior.Node_SquatDown (), behavior.Node_SquatUp ());
+	}
+
 	protected Node BuildTreeRoot()
 	{
 		return
 			new DecoratorLoop(
 				new SequenceShuffle(
-					this.ST_ApproachAndWait(this.wander1),
-					this.ST_ApproachAndWait(this.wander2),
-					this.ST_ApproachAndWait(this.wander3)));
+					this.Squat (),
+					this.ST_ApproachAndWait(this.wander1)
+					));
 	}
 }

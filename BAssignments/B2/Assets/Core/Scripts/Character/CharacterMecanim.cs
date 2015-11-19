@@ -137,6 +137,24 @@ public class CharacterMecanim : MonoBehaviour
         // TODO: Timeout? - AS
     }
 
+	public virtual RunStatus NavSquatDown() {
+		this.Body.SitDown ();
+		if (!this.Body.SitHasFinished ()) {
+			return RunStatus.Running;
+		}
+		Debug.Log ("Finished sitting");
+		return RunStatus.Success;
+	}
+
+	public virtual RunStatus NavSquatUp() {
+		Debug.Log ("Standing");
+		this.Body.StandUp ();
+		if (!this.Body.StandHasFinished ()) {
+			return RunStatus.Running;
+		}
+		return RunStatus.Success;
+	}
+
     /// <summary>
     /// Lerps the character towards a target. Use for precise adjustments.
     /// </summary>

@@ -43,6 +43,20 @@ public class BehaviorMecanim : MonoBehaviour
             () => this.Character.NavStop());
     }
 
+	public Node Node_SquatDown() {
+		return new LeafInvoke (
+			() => this.Character.NavSquatDown (),
+			() => this.Character.NavSquatUp ()
+		);
+	}
+
+	public Node Node_SquatUp() {
+		return new LeafInvoke (
+			() => this.Character.NavSquatUp (),
+			() => this.Character.NavSquatDown ()
+		);
+	}
+
     public Node Node_NudgeTo(Val<Vector3> targ)
     {
         return new LeafInvoke(
