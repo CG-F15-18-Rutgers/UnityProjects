@@ -142,17 +142,23 @@ public class CharacterMecanim : MonoBehaviour
 		if (!this.Body.SitHasFinished ()) {
 			return RunStatus.Running;
 		}
-		Debug.Log ("Finished sitting");
 		return RunStatus.Success;
 	}
 
 	public virtual RunStatus NavSquatUp() {
-		Debug.Log ("Standing");
 		this.Body.StandUp ();
 		if (!this.Body.StandHasFinished ()) {
 			return RunStatus.Running;
 		}
 		return RunStatus.Success;
+	}
+
+	public virtual RunStatus Punch(GameObject punchee) {
+		if (Input.GetKey (KeyCode.Space)) {
+			this.Body.Punch (punchee);
+			return RunStatus.Running;
+		}
+		return RunStatus.Running;
 	}
 
     /// <summary>

@@ -57,6 +57,13 @@ public class BehaviorMecanim : MonoBehaviour
 		);
 	}
 
+	public Node Node_Punch(GameObject punchee) {
+		return new LeafInvoke (
+			() => this.Character.Punch (punchee),
+			() => this.Character.NavSquatUp ()
+		);
+	}
+
     public Node Node_NudgeTo(Val<Vector3> targ)
     {
         return new LeafInvoke(

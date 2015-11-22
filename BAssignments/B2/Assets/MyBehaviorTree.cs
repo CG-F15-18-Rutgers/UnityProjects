@@ -7,6 +7,7 @@ public class MyBehaviorTree : MonoBehaviour
 	public Transform wander1;
 	public Transform wander2;
 	public Transform wander3;
+	public GameObject punchee;
 	public GameObject participant;
 
 	private BehaviorAgent behaviorAgent;
@@ -35,13 +36,21 @@ public class MyBehaviorTree : MonoBehaviour
 		return new Sequence (behavior.Node_SquatDown (), behavior.Node_SquatUp ());
 	}
 
+	protected Node Punch() {
+		BehaviorMecanim behavior = participant.GetComponent<BehaviorMecanim> ();
+		return behavior.Node_Punch (punchee);
+	}
+
 	protected Node BuildTreeRoot()
 	{
 		return
-			new DecoratorLoop(
-				new SequenceShuffle(
-					this.Squat (),
-					this.ST_ApproachAndWait(this.wander1)
+			new DecoratorLoop (
+				new SequenceParallel ((
+					new SequenceShuffle (
+						this.Squat (),
+						this.ST_ApproachAndWait (this.wander1)
+						)),
+					this.Punch ()
 					));
 	}
 }

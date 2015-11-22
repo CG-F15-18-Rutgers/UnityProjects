@@ -386,6 +386,44 @@ public class IKController : MonoBehaviour
         #endregion
     }
 
+	private class PunchIKController {
+		private CrossfadeFBBIK ikPrimary = null;
+		private CrossfadeFBBIK ikSecondary = null;
+		private Interpolator<float> weightInterp;
+		private bool active = false;
+		private bool forward = true;
+		public PunchIKController(CrossfadeFBBIK[] iks) {
+			ikPrimary = iks[0];
+			ikSecondary = iks[1];
+			weightInterp = new Interpolator<float>(
+				0.0f, .5f, Mathf.Lerp);
+		}
+		public void StartPunch(Transform target) {
+			weightInterp.ToMax (.25f);
+			ikSecondary.solver.leftHandEffector.position = target.position;
+			active = true;
+			forward = true;
+		}
+		public void Update() {
+			if (active) {
+				ikSecondary.solver.leftHandEffector.positionWeight = weightInterp.Value;
+				if (forward && weightInterp.State == InterpolationState.Max) {
+					forward = false;
+					weightInterp.ToMin (.25f);
+				} else if (!forward && weightInterp.State == InterpolationState.Min) {
+					active = false;
+				}
+			}
+		}
+		public void StopPunch() {
+			active = true;
+			forward = false;
+		}
+		public bool IsPunching() {
+			return active;
+		}
+	}
+
     /// <summary>
     /// Called when an InteractionEvent has been started
     /// </summary>
@@ -427,6 +465,7 @@ public class IKController : MonoBehaviour
 
     private LookAtIKController lookController;
     private BodyIKController bodyController;
+	private PunchIKController punchController;
 
     void Awake()
     {
@@ -437,6 +476,10 @@ public class IKController : MonoBehaviour
         this.bodyController = new BodyIKController(
             this.GetComponents<CrossfadeFBBIK>(),
             this.DefaultDelay);
+		this.punchController = new PunchIKController (
+			this.GetComponents<CrossfadeFBBIK> ()
+		);
+		
         this.RegisterWithBodyController();
     }
 
@@ -444,6 +487,7 @@ public class IKController : MonoBehaviour
     {
         this.bodyController.Update();
         this.lookController.Update();
+		this.punchController.Update ();
 
         if (this.bodyController.State == BodyIKState.Offline
             && this.lookController.IsFullBody() == false)
@@ -454,7 +498,17 @@ public class IKController : MonoBehaviour
     {
         this.bodyController.LateUpdate();
         this.lookController.LateUpdate();
+
     }
+
+	public void Punch(Transform target) {
+		this.punchController.StartPunch (target);
+		Debug.Log ("Punching");
+	}
+
+	public bool IsPunching() {
+		return this.punchController.IsPunching ();
+	}
 
     public void LookAt(Vector3 target, float delay)
     {

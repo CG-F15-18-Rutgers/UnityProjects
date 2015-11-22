@@ -127,6 +127,14 @@ public class BodyMecanim : MonoBehaviour
     {
         this.ik.StopInteraction(effector.Value);
     }
+
+	public void Punch(GameObject punchee) {
+		this.ik.Punch (punchee.transform);
+	}
+
+	public bool IsPunching() {
+		return this.ik.IsPunching ();
+	}
     #endregion
 
     #region HeadLook Commands
