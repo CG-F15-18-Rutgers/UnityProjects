@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using TreeSharpPlus;
 
 public class MyBehaviorTree : MonoBehaviour
@@ -9,6 +10,11 @@ public class MyBehaviorTree : MonoBehaviour
 	public Transform wander3;
 	public GameObject punchee;
 	public GameObject participant;
+
+	public GameObject benchGuy1;
+	public GameObject benchGuy2;
+
+	private GameObject[] daniels;
 
 	private BehaviorAgent behaviorAgent;
 	// Use this for initialization
@@ -25,32 +31,68 @@ public class MyBehaviorTree : MonoBehaviour
 	
 	}
 
-	protected Node ST_ApproachAndWait(Transform target)
+	protected Node ST_ApproachAndWait(GameObject daniel, Transform target)
 	{
 		Val<Vector3> position = Val.V (() => target.position);
-		return new Sequence( participant.GetComponent<BehaviorMecanim>().Node_GoTo(position), new LeafWait(1000));
+		return new Sequence( daniel.GetComponent<BehaviorMecanim>().Node_GoTo(position), new LeafWait(1000));
 	}
 
-	protected Node Squat() {
-		BehaviorMecanim behavior = participant.GetComponent<BehaviorMecanim> ();
+	protected Node Squat(GameObject daniel) {
+		BehaviorMecanim behavior = daniel.GetComponent<BehaviorMecanim> ();
 		return new Sequence (behavior.Node_SquatDown (), behavior.Node_SquatUp ());
 	}
 
-	protected Node Punch() {
-		BehaviorMecanim behavior = participant.GetComponent<BehaviorMecanim> ();
-		return behavior.Node_Punch (punchee);
+	protected Node UserPunch(GameObject daniel) {
+		BehaviorMecanim behavior = daniel.GetComponent<BehaviorMecanim> ();
+		return behavior.Node_UserPunch (punchee);
 	}
 
+	protected Node Punch(GameObject from, GameObject to) {
+		BehaviorMecanim behavior = from.GetComponent<BehaviorMecanim> ();
+		return behavior.Node_Punch (to);
+	}
+
+	protected Node BecomeCrab(GameObject daniel) {
+		BehaviorMecanim behavior = daniel.GetComponent<BehaviorMecanim> ();
+		return behavior.Node_BecomeCrab ();
+	}
+
+	protected Node LookAt(GameObject from, GameObject to) {
+		BehaviorMecanim behavior = from.GetComponent<BehaviorMecanim> ();
+		return behavior.Node_OrientTowards (to.transform.position + new Vector3(0,2,0));
+	}
+	
 	protected Node BuildTreeRoot()
 	{
-		return
+		daniels = GameObject.FindGameObjectsWithTag ("Daniel");
+
+		ForEach<GameObject> characterTree = new ForEach<GameObject> (
+			(daniel) => {
+				return new DecoratorLoop(new SequenceShuffle(
+					this.Squat (daniel),
+					this.ST_ApproachAndWait (daniel, this.wander1),
+					this.ST_ApproachAndWait (daniel, this.wander2),
+					this.BecomeCrab(daniel)
+					
+				));
+		}, daniels );
+
+		Sequence mainTree = new Sequence(
+			new SequenceParallel(
+				this.ST_ApproachAndWait (benchGuy1, this.wander2),
+				this.ST_ApproachAndWait (benchGuy2, this.wander2)
+			),
+			this.LookAt(benchGuy2, benchGuy1),
+			this.Punch (benchGuy1, benchGuy2),
+			this.Punch (benchGuy2, benchGuy1),
+			this.ST_ApproachAndWait (benchGuy1, this.wander1),
 			new DecoratorLoop (
-				new SequenceParallel ((
-					new SequenceShuffle (
-						this.Squat (),
-						this.ST_ApproachAndWait (this.wander1)
-						)),
-					this.Punch ()
-					));
+				new SequenceParallel(
+					characterTree,
+					this.UserPunch (participant)
+				)
+			)
+		);
+		return mainTree;
 	}
 }

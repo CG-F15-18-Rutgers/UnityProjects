@@ -153,12 +153,18 @@ public class CharacterMecanim : MonoBehaviour
 		return RunStatus.Success;
 	}
 
-	public virtual RunStatus Punch(GameObject punchee) {
-		if (Input.GetKey (KeyCode.Space)) {
-			this.Body.Punch (punchee);
-			return RunStatus.Running;
+	public virtual RunStatus Punch(Vector3 target) {
+		if (this.Body.IsPunchComplete()) {
+			this.Body.ResetPunch ();
+			return RunStatus.Success;
 		}
+		this.Body.Punch (target);
 		return RunStatus.Running;
+	}
+
+	public virtual RunStatus BecomeCrab() {
+		this.Body.BecomeCrab ();
+		return RunStatus.Success;
 	}
 
     /// <summary>

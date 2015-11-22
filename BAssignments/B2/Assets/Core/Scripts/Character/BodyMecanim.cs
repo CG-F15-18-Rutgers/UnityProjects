@@ -128,12 +128,24 @@ public class BodyMecanim : MonoBehaviour
         this.ik.StopInteraction(effector.Value);
     }
 
-	public void Punch(GameObject punchee) {
-		this.ik.Punch (punchee.transform);
+	public void Punch(Vector3 target) {
+		this.ik.Punch (target);
 	}
 
 	public bool IsPunching() {
 		return this.ik.IsPunching ();
+	}
+
+	public void ResetPunch(){
+		this.ik.ResetPunch ();
+	}
+
+	public bool IsPunchComplete() {
+		return this.ik.IsPunchComplete ();
+	}
+
+	public void BecomeCrab() {
+		this.ik.BecomeCrab ();
 	}
     #endregion
 

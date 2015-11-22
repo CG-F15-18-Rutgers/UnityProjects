@@ -197,6 +197,9 @@ namespace TreeSharpPlus
                 if (executionStatus == RunStatus.Running)
                 {
                     executionStatus = this.UpdateChildren();
+					if (executionStatus == RunStatus.Success) {
+						Debug.Log ("Done with children");
+					}
                 }
 
                 // Make sure all of the children have terminated even

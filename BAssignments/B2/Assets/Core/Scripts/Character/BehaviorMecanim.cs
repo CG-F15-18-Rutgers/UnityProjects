@@ -57,10 +57,29 @@ public class BehaviorMecanim : MonoBehaviour
 		);
 	}
 
+	public Node Node_UserPunch(GameObject punchee) {
+		return new LeafInvoke (
+			() => {
+				if (Input.GetKey (KeyCode.Space)) {
+					return Character.Punch (punchee.transform.position);
+				}
+				return RunStatus.Running;
+			},
+			() => {}
+		);
+	}
+
 	public Node Node_Punch(GameObject punchee) {
 		return new LeafInvoke (
-			() => this.Character.Punch (punchee),
-			() => this.Character.NavSquatUp ()
+			() => this.Character.Punch (punchee.transform.position + new Vector3(0,2,0)),
+			() => {}
+		);
+	}
+
+	public Node Node_BecomeCrab() {
+		return new LeafInvoke (
+			() => this.Character.BecomeCrab (),
+			() => {}
 		);
 	}
 
