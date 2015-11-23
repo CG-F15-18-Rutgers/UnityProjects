@@ -109,6 +109,11 @@ public class CharacterMecanim : MonoBehaviour
         this.Body.NavSetOrientationBehavior(behavior.Value);
         return RunStatus.Success;
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    
+
 
     /// <summary>
     /// Sets a new navigation target. Will fail immediately if the
@@ -135,6 +140,21 @@ public class CharacterMecanim : MonoBehaviour
         }
         return RunStatus.Running;
         // TODO: Timeout? - AS
+    }
+
+    public virtual RunStatus NavPlantRun()
+    {
+        this.Body.PlantRun();
+        if(!this.Body.IsPlantRunning())
+        {
+            return RunStatus.Running;
+        }
+        return RunStatus.Success;
+    }
+
+    public virtual void NavPlantSwitch()
+    {
+        this.Body.PlantSwitch();
     }
 
 	public virtual RunStatus NavSquatDown() {
