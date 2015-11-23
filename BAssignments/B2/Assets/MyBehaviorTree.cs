@@ -85,8 +85,14 @@ public class MyBehaviorTree : MonoBehaviour
 				));
 		}, daniels );
 
+		ForEach<GameObject> fires = new ForEach<GameObject> (
+			(daniel) => {
+			return new DecoratorLoop(new SequenceShuffle(
+				this.ST_ApproachAndWaitDemonFire(daniel)
+				));
+		}, daniels );
+
 		Sequence mainTree = new Sequence(
-			this.ST_ApproachAndWaitDemonFire(benchGuy1),
 			new SequenceParallel(
 				this.ST_ApproachAndWait (benchGuy1, this.wander2),
 				this.ST_ApproachAndWait (benchGuy2, this.wander2)
