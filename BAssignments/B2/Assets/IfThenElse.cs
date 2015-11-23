@@ -67,12 +67,5 @@ namespace TreeSharpPlus
 			elseNode.Start ();
 		}
 
-		public override void Stop() {
-			ifNode.Stop ();
-			thenNode.Stop ();
-			elseNode.Stop ();
-			base.Stop ();
-		}
-
 	}
 }

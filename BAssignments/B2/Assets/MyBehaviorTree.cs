@@ -69,7 +69,16 @@ public class MyBehaviorTree : MonoBehaviour
 		BehaviorMecanim behavior = from.GetComponent<BehaviorMecanim> ();
 		return behavior.Node_OrientTowards (to.transform.position + new Vector3(0,2,0));
 	}
-	
+
+	protected bool allCrabs() {
+		foreach(GameObject daniel in daniels) {
+			if (!daniel.GetComponent<IKController>().IsCrab ()) {
+				return false;
+			}
+		}
+		return true;
+	}
+		
 	protected Node BuildTreeRoot()
 	{
 		daniels = GameObject.FindGameObjectsWithTag ("Daniel");
@@ -101,22 +110,16 @@ public class MyBehaviorTree : MonoBehaviour
 				this.ST_ApproachAndWaitDemonFire(daniel)
 				));
 		}, daniels );
-
-		IfThenElse ifThenNode = new IfThenElse(new LeafAssert(
-			() => {
-				foreach(GameObject daniel in daniels) {
-					if (!daniel.GetComponent<IKController>().IsCrab ()) {
-						return false;
-					}
-				}
-				return true;
-			}), 
-			endStory,
-			middleStory
-		);
-
-		Sequence mainTree = new Sequence(
-			new DecoratorLoop(ifThenNode)
+		
+		SequenceParallel mainTree = new SequenceParallel(
+			new Sequence(
+				new LeafAssert(() => {return allCrabs ();}),
+				endStory
+			),
+			new Sequence(
+				new LeafAssert(() => {return !allCrabs ();}),
+				middleStory
+			)
 		);
 
 		return mainTree;
