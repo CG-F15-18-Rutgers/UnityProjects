@@ -539,6 +539,10 @@ public class IKController : MonoBehaviour
 		isCrab = true;
 	}
 
+	public bool IsCrab() {
+		return isCrab;
+	}
+
     public void LookAt(Vector3 target, float delay)
     {
         this.lookController.LookAt(target, delay);

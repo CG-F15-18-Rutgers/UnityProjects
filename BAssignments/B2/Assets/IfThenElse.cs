@@ -22,27 +22,36 @@ namespace TreeSharpPlus
 			this.ifNode = ifNode;
 			this.thenNode = thenNode;
 			this.elseNode = elseNode;
+			ifNode.Parent = thenNode.Parent = elseNode.Parent = this;
 		}
 
 		public override IEnumerable<RunStatus> Execute()
 		{
-			RunStatus ifStatus = this.TickNode (ifNode);
-			while (ifStatus == RunStatus.Running) {
+			Debug.Log ("IfThenElse start");
+			ifNode.Start ();
+			this.TickNode (ifNode);
+			Debug.Log (ifNode.LastStatus);
+			while (ifNode.LastStatus == RunStatus.Running) {
+				Debug.Log ("If start");
 				yield return RunStatus.Running;
-				ifStatus = this.TickNode(ifNode);
+				this.TickNode(ifNode);
 			}
 
-			if (ifStatus == RunStatus.Success) {
-				RunStatus thenStatus = this.TickNode(thenNode);
-				while (thenStatus == RunStatus.Running) {
+			if (ifNode.LastStatus == RunStatus.Success) {
+				Debug.Log ("If success");
+				thenNode.Start ();
+				this.TickNode(thenNode);
+				while (thenNode.LastStatus == RunStatus.Running) {
 					yield return RunStatus.Running;
-					thenStatus = this.TickNode(thenNode);
+					this.TickNode(thenNode);
 				}
 			} else {
-				RunStatus elseStatus = this.TickNode(elseNode);
-				while (elseStatus == RunStatus.Running) {
+				Debug.Log ("If failure");
+				elseNode.Start ();
+				this.TickNode (elseNode);
+				while (elseNode.LastStatus == RunStatus.Running) {
 					yield return RunStatus.Running;
-					elseStatus = this.TickNode(elseNode);
+					this.TickNode(elseNode);
 				}
 			}
 			yield return RunStatus.Success;

@@ -168,7 +168,8 @@ public class CharacterMecanim : MonoBehaviour
 	}
 		
 	public virtual RunStatus Disappear() {
-		this.gameObject.active = false;
+		//this.gameObject.active = false;
+		this.GetComponent<Renderer> ().enabled = false;
 		return RunStatus.Success;
 	}
 

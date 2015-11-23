@@ -73,6 +73,14 @@ public class MyBehaviorTree : MonoBehaviour
 	protected Node BuildTreeRoot()
 	{
 		daniels = GameObject.FindGameObjectsWithTag ("Daniel");
+		
+		IfThenElse ifThenNode = new IfThenElse(new LeafAssert(
+			() => {
+			return true;
+		}), 
+		new LeafInvoke(() => {Debug.Log ("YES"); return RunStatus.Success;}),
+		new LeafInvoke(() => {Debug.Log ("NO"); return RunStatus.Success;})
+		);
 
 		ForEach<GameObject> characterTree = new ForEach<GameObject> (
 			(daniel) => {
@@ -86,7 +94,7 @@ public class MyBehaviorTree : MonoBehaviour
 		}, daniels );
 
 		Sequence mainTree = new Sequence(
-			this.ST_ApproachAndWaitDemonFire(benchGuy1),
+			ifThenNode,
 			new SequenceParallel(
 				this.ST_ApproachAndWait (benchGuy1, this.wander2),
 				this.ST_ApproachAndWait (benchGuy2, this.wander2)
