@@ -71,7 +71,7 @@ public class BehaviorMecanim : MonoBehaviour
 	{
 		return new LeafInvoke (
 			() => this.Character.Disappear (),
-			() => this.Character.NavStop ()
+			() => {}
 		);
 	}
 

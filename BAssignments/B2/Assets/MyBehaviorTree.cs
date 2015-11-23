@@ -89,12 +89,11 @@ public class MyBehaviorTree : MonoBehaviour
 					this.ST_ApproachAndWait (daniel, this.wander1),
 					this.ST_ApproachAndWait (daniel, this.wander2),
 					this.BecomeCrab(daniel)
-					
 				));
 		}, daniels );
 
 		Sequence mainTree = new Sequence(
-			ifThenNode,
+			this.ST_ApproachAndWaitDemonFire(benchGuy1),
 			new SequenceParallel(
 				this.ST_ApproachAndWait (benchGuy1, this.wander2),
 				this.ST_ApproachAndWait (benchGuy2, this.wander2)
