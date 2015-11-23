@@ -186,6 +186,11 @@ public class CharacterMecanim : MonoBehaviour
 		this.Body.BecomeCrab ();
 		return RunStatus.Success;
 	}
+		
+	public virtual RunStatus Disappear() {
+		this.gameObject.active = false;
+		return RunStatus.Success;
+	}
 
     /// <summary>
     /// Lerps the character towards a target. Use for precise adjustments.
