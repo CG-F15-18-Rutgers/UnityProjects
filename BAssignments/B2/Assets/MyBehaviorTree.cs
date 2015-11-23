@@ -14,6 +14,8 @@ public class MyBehaviorTree : MonoBehaviour
 	public GameObject benchGuy1;
 	public GameObject benchGuy2;
 
+	public GameObject demonFire;
+
 	private GameObject[] daniels;
 
 	private BehaviorAgent behaviorAgent;
@@ -35,6 +37,12 @@ public class MyBehaviorTree : MonoBehaviour
 	{
 		Val<Vector3> position = Val.V (() => target.position);
 		return new Sequence( daniel.GetComponent<BehaviorMecanim>().Node_GoTo(position), new LeafWait(1000));
+	}
+
+	protected Node ST_ApproachAndWaitDemonFire(GameObject daniel)
+	{
+		Val<Vector3> position = Val.V (() => demonFire.transform.position);
+		return new Sequence( daniel.GetComponent<BehaviorMecanim>().Node_GoTo(position), daniel.GetComponent<BehaviorMecanim>().Node_Disappear());
 	}
 
 	protected Node Squat(GameObject daniel) {
@@ -78,6 +86,7 @@ public class MyBehaviorTree : MonoBehaviour
 		}, daniels );
 
 		Sequence mainTree = new Sequence(
+			this.ST_ApproachAndWaitDemonFire(benchGuy1),
 			new SequenceParallel(
 				this.ST_ApproachAndWait (benchGuy1, this.wander2),
 				this.ST_ApproachAndWait (benchGuy2, this.wander2)
