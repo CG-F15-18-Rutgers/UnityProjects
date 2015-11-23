@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TreeSharpPlus;
+using UnityEngine.UI;
 
 public class MyBehaviorTree : MonoBehaviour
 {
@@ -10,14 +11,13 @@ public class MyBehaviorTree : MonoBehaviour
 	public Transform wander3;
 	public GameObject punchee;
 	public GameObject participant;
-
 	public GameObject benchGuy1;
 	public GameObject benchGuy2;
-
 	public GameObject demonFire;
 
 	private GameObject[] daniels;
 	private bool isFirst = true;
+	private GameObject[] acts;
 
 	private BehaviorAgent behaviorAgent;
 	// Use this for initialization
@@ -26,6 +26,7 @@ public class MyBehaviorTree : MonoBehaviour
 		behaviorAgent = new BehaviorAgent (this.BuildTreeRoot ());
 		BehaviorManager.Instance.Register (behaviorAgent);
 		behaviorAgent.StartBehavior ();
+		acts = new GameObject[]{ GameObject.Find ("act1"), GameObject.Find ("act2"), GameObject.Find ("act3"), GameObject.Find ("act4") };
 	}
 
 	protected bool isFirstFinished() {
@@ -94,6 +95,19 @@ public class MyBehaviorTree : MonoBehaviour
 		() => {});
 	}
 
+	protected Node Quote(string message) {
+		return new LeafInvoke (() => {
+			GameObject.Find ("quote").GetComponent<Text> ().text = "\"" + message + "\"";
+		}, () => {});
+	}
+
+	protected Node ShowAct(int index) {
+		return new LeafInvoke(() => {
+			for (int i = 0; i < acts.Length; i++) acts[i].SetActive(false);
+			acts[index].SetActive(true);
+		});
+	}
+
 	protected Node CheckFirstGuy(GameObject daniel) {
 		return new IfThenElse (
 			new LeafInvoke (() => {
@@ -119,25 +133,38 @@ public class MyBehaviorTree : MonoBehaviour
 
 		Sequence beginStory = new Sequence (
 			this.SetCamera(0),
+			this.ShowAct(0),
 			new SequenceParallel (
 				this.ST_ApproachAndWait (benchGuy1, this.wander2),
 				this.ST_ApproachAndWait (benchGuy2, this.wander2)
 			),
 			this.LookAt (benchGuy2, benchGuy1),
-			this.Punch (benchGuy1, benchGuy2),
-			this.Punch (benchGuy2, benchGuy1),
+			this.Quote ("Hey man, I wanted to use that."),
+			new LeafWait(2000),
+			this.Quote ("Pssh, get out of my way."),
+			new LeafWait(2000),
+			this.Quote ("Unfortunately for you, I have inverse kinematic punches enabled."),
+			new DecoratorLoop(3, new Sequence(
+				this.Punch (benchGuy1, benchGuy2),
+				this.Punch (benchGuy2, benchGuy1)
+		    )),
+			this.Quote ("Yeah that's what I thought."),
 			this.ST_ApproachAndWait (benchGuy1, this.wander1)
 		);
 
 		ForEach<GameObject> middleStory = new ForEach<GameObject> (
 			(daniel) => {
 			return new Sequence (
+				this.ShowAct(1),
 				this.SetCamera(2),
+				this.Quote ("Now it's time to work out!"),
 				new DecoratorLoop(6, new SequenceShuffle(
 					this.Squat (daniel),
 					this.Punch (daniel, punchee)
 				)),
-				this.BecomeCrab (daniel)
+				new LeafWait(1000),
+				this.BecomeCrab (daniel),
+				new LeafWait(1000)
 				);
 		}
 		, daniels);
@@ -146,10 +173,15 @@ public class MyBehaviorTree : MonoBehaviour
 		ForEach<GameObject> endStory = new ForEach<GameObject> (
 			(daniel) => {
 			return new Sequence(
+				this.ShowAct(2),
 				this.SetCamera (1),
+				this.Quote ("The time has come to choose a new Crab God."),
 				new LeafWait(1000),
 				this.ST_ApproachAndWaitDemonFire(daniel),
-				this.CheckFirstGuy(daniel)
+				this.CheckFirstGuy(daniel),
+				this.Quote ("HAHA! I am the new Crab God now, bow to me lesser beings!"),
+				new LeafWait(1000),
+				this.ShowAct(3)
 				);
 		}, daniels );
 

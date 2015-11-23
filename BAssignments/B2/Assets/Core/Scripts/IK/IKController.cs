@@ -397,7 +397,7 @@ public class IKController : MonoBehaviour
 			ikPrimary = iks[0];
 			ikSecondary = iks[1];
 			weightInterp = new Interpolator<float>(
-				0.0f, .5f, Mathf.Lerp);
+				0.0f, .75f, Mathf.Lerp);
 		}
 		public void StartPunch(Vector3 target) {
 			weightInterp.ToMax (.25f);
