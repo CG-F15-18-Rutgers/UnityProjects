@@ -3,6 +3,9 @@
 ===============================================================
 ======================= A love story ==========================
 
+Link: http://kevinalbs.com/CS428/b2/
+GitHub: https://github.com/CG-F15-18-Rutgers/UnityProjects
+
 We implemented the following new affordances:
 - Enlarge - Scales up a character's size.
 - Squat - Shows a user squatting down and up.
