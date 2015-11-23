@@ -19,10 +19,8 @@ public class CameraController : MonoBehaviour {
             currCam++;
         }
 
-        Debug.Log(cameras.Length);
 
         int index = Mathf.Abs(currCam % cameras.Length);
-        Debug.Log(index);
 
         foreach (GameObject camera in cameras) {
             camera.SetActive(false);
