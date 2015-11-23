@@ -128,10 +128,26 @@ public class BodyMecanim : MonoBehaviour
         this.ik.StopInteraction(effector.Value);
     }
 
-	public void Punch(Vector3 target) {
-		this.ik.Punch (target);
-	}
+    public void PlantRun()
+    {
+        this.animator.SetBool("B_PlantRun", true);
+    }
 
+    public void PlantSwitch()
+    {
+        bool direction = this.animator.GetBool("B_PlantDir");
+        direction = !direction;
+        this.animator.SetBool("B_PlantDir", direction);
+    }
+
+    public bool IsPlantRunning()
+    {
+        return this.animator.GetBool("B_PlantRun");
+    }
+
+    public void Punch(Vector3 target) {
+        this.ik.Punch(target);
+    }
 	public bool IsPunching() {
 		return this.ik.IsPunching ();
 	}

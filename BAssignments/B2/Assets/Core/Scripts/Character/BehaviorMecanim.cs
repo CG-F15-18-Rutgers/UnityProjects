@@ -34,6 +34,28 @@ public class BehaviorMecanim : MonoBehaviour
 
     #region Navigation
     /// <summary>
+    /// Tries to Plant run to target
+    /// </summary>
+    public Node Node_PlantRunTo(Val<Vector3> targ)
+    {
+        Vector3 start = this.transform.position;
+
+        Func<RunStatus> PlantRunning =
+            delegate ()
+            {
+                Vector3 targPos = targ.Value;
+                Vector3 startPos = start;
+                Vector3 currPos = this.transform.position;
+                Vector3 norm = Vector3.Normalize(Vector3.Cross(targPos, Vector3.up));
+                return this.Character.NavGoTo(targ);
+            };
+        return new LeafInvoke(
+            PlantRunning,
+            () => this.Character.NavStop());
+    }
+
+    
+    /// <summary>
     /// Approaches a target
     /// </summary>
 	/// 
