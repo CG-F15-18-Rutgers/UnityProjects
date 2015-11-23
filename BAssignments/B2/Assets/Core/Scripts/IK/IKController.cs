@@ -520,7 +520,6 @@ public class IKController : MonoBehaviour
 		if (!this.punchController.IsPunching ()) {
 			this.punchController.StartPunch (target);
 		}
-		Debug.Log ("Punching");
 	}
 
 	public bool IsPunching() {

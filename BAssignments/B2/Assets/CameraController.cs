@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.Z)) {
+        /*if (Input.GetKeyDown(KeyCode.Z)) {
             currCam--;
         } else if (Input.GetKeyDown(KeyCode.X)) {
             currCam++;
@@ -22,9 +22,14 @@ public class CameraController : MonoBehaviour {
 
         int index = Mathf.Abs(currCam % cameras.Length);
 
-        foreach (GameObject camera in cameras) {
-            camera.SetActive(false);
-        }
-        cameras[index].SetActive(true);
+		SetCamera (index);
+		*/
     }
+
+	public void SetCamera(int index) {
+		foreach (GameObject camera in cameras) {
+			camera.SetActive(false);
+		}
+		cameras[index].SetActive(true);
+	}
 }

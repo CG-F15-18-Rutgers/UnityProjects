@@ -188,7 +188,7 @@ public class CharacterMecanim : MonoBehaviour
 	}
 		
 	public virtual RunStatus Disappear() {
-		this.transform.localScale = new Vector3 (4f, 4f, 4f);
+		this.transform.localScale = new Vector3 (2f, 2f, 2f);
 		return RunStatus.Success;
 	}
 

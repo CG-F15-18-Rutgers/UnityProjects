@@ -17,6 +17,7 @@ public class MyBehaviorTree : MonoBehaviour
 	public GameObject demonFire;
 
 	private GameObject[] daniels;
+	private bool isFirst = true;
 
 	private BehaviorAgent behaviorAgent;
 	// Use this for initialization
@@ -25,6 +26,12 @@ public class MyBehaviorTree : MonoBehaviour
 		behaviorAgent = new BehaviorAgent (this.BuildTreeRoot ());
 		BehaviorManager.Instance.Register (behaviorAgent);
 		behaviorAgent.StartBehavior ();
+	}
+
+	protected bool isFirstFinished() {
+		bool val = isFirst;
+		isFirst = false;
+		return val;
 	}
 	
 	// Update is called once per frame
@@ -78,12 +85,40 @@ public class MyBehaviorTree : MonoBehaviour
 		}
 		return true;
 	}
+
+	protected Node SetCamera(int index) {
+		return new LeafInvoke (() => {
+			this.GetComponent<CameraController> ().SetCamera (index);
+			return RunStatus.Success;
+		},
+		() => {});
+	}
+
+	protected Node CheckFirstGuy(GameObject daniel) {
+		return new IfThenElse (
+			new LeafInvoke (() => {
+			if (isFirstFinished ())
+				return RunStatus.Success;
+			else
+				return RunStatus.Failure;
+			}, () => {}),
+			new Sequence(
+				new LeafInvoke (() => {
+					daniel.transform.localScale = new Vector3(4,4,4);
+					return RunStatus.Success;
+				}, () => {}), 
+				this.ST_ApproachAndWait (daniel, this.wander1)
+			),
+			this.ST_ApproachAndWait (daniel, this.wander2)
+		);
+	}
 		
 	protected Node BuildTreeRoot()
 	{
 		daniels = GameObject.FindGameObjectsWithTag ("Daniel");
 
 		Sequence beginStory = new Sequence (
+			this.SetCamera(0),
 			new SequenceParallel (
 				this.ST_ApproachAndWait (benchGuy1, this.wander2),
 				this.ST_ApproachAndWait (benchGuy2, this.wander2)
@@ -94,34 +129,30 @@ public class MyBehaviorTree : MonoBehaviour
 			this.ST_ApproachAndWait (benchGuy1, this.wander1)
 		);
 
-		DecoratorLoop middleStory = new DecoratorLoop(new ForEach<GameObject> (
+		ForEach<GameObject> middleStory = new ForEach<GameObject> (
 			(daniel) => {
-			return new SequenceShuffle (
-				this.Squat (daniel),
-				this.ST_ApproachAndWait (daniel, this.wander1),
-				this.ST_ApproachAndWait (daniel, this.wander2),
-				this.BecomeCrab (daniel));
+			return new Sequence (
+				this.SetCamera(2),
+				new DecoratorLoop(6, new SequenceShuffle(
+					this.Squat (daniel),
+					this.Punch (daniel, punchee)
+				)),
+				this.BecomeCrab (daniel)
+				);
 		}
-		, daniels));
+		, daniels);
+
 
 		ForEach<GameObject> endStory = new ForEach<GameObject> (
 			(daniel) => {
-			return new DecoratorLoop(new SequenceShuffle(
-				this.ST_ApproachAndWaitDemonFire(daniel)
-				));
+			return new Sequence(
+				this.SetCamera (1),
+				new LeafWait(1000),
+				this.ST_ApproachAndWaitDemonFire(daniel),
+				this.CheckFirstGuy(daniel)
+				);
 		}, daniels );
-		
-		SequenceParallel mainTree = new SequenceParallel(
-			new Sequence(
-				new LeafAssert(() => {return allCrabs ();}),
-				endStory
-			),
-			new Sequence(
-				new LeafAssert(() => {return !allCrabs ();}),
-				middleStory
-			)
-		);
 
-		return mainTree;
+		return new Sequence(beginStory, middleStory, endStory);
 	}
 }
