@@ -73,48 +73,52 @@ public class MyBehaviorTree : MonoBehaviour
 	protected Node BuildTreeRoot()
 	{
 		daniels = GameObject.FindGameObjectsWithTag ("Daniel");
-		
-		IfThenElse ifThenNode = new IfThenElse(new LeafAssert(
-			() => {
-			return true;
-		}), 
-		new LeafInvoke(() => {Debug.Log ("YES"); return RunStatus.Success;}),
-		new LeafInvoke(() => {Debug.Log ("NO"); return RunStatus.Success;})
+
+		Sequence beginStory = new Sequence (
+			new SequenceParallel (
+				this.ST_ApproachAndWait (benchGuy1, this.wander2),
+				this.ST_ApproachAndWait (benchGuy2, this.wander2)
+			),
+			this.LookAt (benchGuy2, benchGuy1),
+			this.Punch (benchGuy1, benchGuy2),
+			this.Punch (benchGuy2, benchGuy1),
+			this.ST_ApproachAndWait (benchGuy1, this.wander1)
 		);
 
-		ForEach<GameObject> characterTree = new ForEach<GameObject> (
+		DecoratorLoop middleStory = new DecoratorLoop(new ForEach<GameObject> (
 			(daniel) => {
-				return new DecoratorLoop(new SequenceShuffle(
-					this.Squat (daniel),
-					this.ST_ApproachAndWait (daniel, this.wander1),
-					this.ST_ApproachAndWait (daniel, this.wander2),
-					this.BecomeCrab(daniel)
-				));
-		}, daniels );
+			return new SequenceShuffle (
+				this.Squat (daniel),
+				this.ST_ApproachAndWait (daniel, this.wander1),
+				this.ST_ApproachAndWait (daniel, this.wander2),
+				this.BecomeCrab (daniel));
+		}
+		, daniels));
 
-		ForEach<GameObject> fires = new ForEach<GameObject> (
+		ForEach<GameObject> endStory = new ForEach<GameObject> (
 			(daniel) => {
 			return new DecoratorLoop(new SequenceShuffle(
 				this.ST_ApproachAndWaitDemonFire(daniel)
 				));
 		}, daniels );
 
-		Sequence mainTree = new Sequence(
-			new SequenceParallel(
-				this.ST_ApproachAndWait (benchGuy1, this.wander2),
-				this.ST_ApproachAndWait (benchGuy2, this.wander2)
-			),
-			this.LookAt(benchGuy2, benchGuy1),
-			this.Punch (benchGuy1, benchGuy2),
-			this.Punch (benchGuy2, benchGuy1),
-			this.ST_ApproachAndWait (benchGuy1, this.wander1),
-			new DecoratorLoop (
-				new SequenceParallel(
-					characterTree,
-					this.UserPunch (participant)
-				)
-			)
+		IfThenElse ifThenNode = new IfThenElse(new LeafAssert(
+			() => {
+				foreach(GameObject daniel in daniels) {
+					if (!daniel.GetComponent<IKController>().IsCrab ()) {
+						return false;
+					}
+				}
+				return true;
+			}), 
+			endStory,
+			middleStory
 		);
+
+		Sequence mainTree = new Sequence(
+			new DecoratorLoop(ifThenNode)
+		);
+
 		return mainTree;
 	}
 }

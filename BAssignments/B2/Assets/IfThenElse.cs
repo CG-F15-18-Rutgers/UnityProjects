@@ -31,6 +31,10 @@ namespace TreeSharpPlus
 			ifNode.Start ();
 			this.TickNode (ifNode);
 			Debug.Log (ifNode.LastStatus);
+			RunStatus executionStatus = RunStatus.Running;
+
+
+
 			while (ifNode.LastStatus == RunStatus.Running) {
 				Debug.Log ("If start");
 				yield return RunStatus.Running;
@@ -47,15 +51,28 @@ namespace TreeSharpPlus
 				}
 			} else {
 				Debug.Log ("If failure");
-				elseNode.Start ();
+
 				this.TickNode (elseNode);
 				while (elseNode.LastStatus == RunStatus.Running) {
 					yield return RunStatus.Running;
 					this.TickNode(elseNode);
 				}
 			}
-			yield return RunStatus.Success;
-			yield break;
+			yield return RunStatus.Running;
 		}
+
+		public override void Start() {
+			ifNode.Start ();
+			thenNode.Start ();
+			elseNode.Start ();
+		}
+
+		public override void Stop() {
+			ifNode.Stop ();
+			thenNode.Stop ();
+			elseNode.Stop ();
+			base.Stop ();
+		}
+
 	}
 }
