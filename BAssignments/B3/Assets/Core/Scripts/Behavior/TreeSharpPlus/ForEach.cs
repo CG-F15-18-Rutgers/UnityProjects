@@ -135,7 +135,7 @@ namespace TreeSharpPlus
             }
             if (this.IsRunning)
             {
-                Debug.Log("Terminating: " + participantToChild[participant].LastTerminationStatus.Value.ToString());
+                //Debug.Log("Terminating: " + participantToChild[participant].LastTerminationStatus.Value.ToString());
                 return participantToChild[participant].LastTerminationStatus.Value;
             }
             else
@@ -198,7 +198,7 @@ namespace TreeSharpPlus
                 {
                     executionStatus = this.UpdateChildren();
 					if (executionStatus == RunStatus.Success) {
-						Debug.Log ("Done with children");
+						//Debug.Log ("Done with children");
 					}
                 }
 
@@ -221,7 +221,7 @@ namespace TreeSharpPlus
                 // waiting to terminate has done so, we're good.
                 else if (executionStatus != RunStatus.Running)
                 {
-                    Debug.Log("ForEach node has terminated with " + executionStatus.ToString());
+                    //Debug.Log("ForEach node has terminated with " + executionStatus.ToString());
                     yield return executionStatus;
                     yield break;
                 }

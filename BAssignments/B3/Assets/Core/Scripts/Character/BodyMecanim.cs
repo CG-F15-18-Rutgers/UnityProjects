@@ -363,6 +363,9 @@ public class BodyMecanim : MonoBehaviour
 
 		switch (gestureName.ToUpper())
 		{
+		case "KICK":
+			this.animator.SetBool ("B_Kicking", isActive);
+			break;
 		case "BREAKDANCE": 
 			this.animator.SetBool("B_Breakdance", isActive); 
 			break;
