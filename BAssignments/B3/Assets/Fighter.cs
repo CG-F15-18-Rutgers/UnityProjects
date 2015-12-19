@@ -65,7 +65,7 @@ public class Fighter : MonoBehaviour {
 	}
 
 	public void defend() {
-		defense += .05f;
+		defense += .1f;
 		if (defense >= .75f) {
 			defense = .75f;
 		}
@@ -73,6 +73,7 @@ public class Fighter : MonoBehaviour {
 	}
 
 	public void UpdateStats() {
+		nameBar.text = name;
 		hpBar.transform.localScale = new Vector3 (hp, 1, 1);
 		stats.text = "Strength = " + (int)(strength * 100) + "\n"
 			+ "Hit % = " + (int)(hitProb * 100) + "\n"
