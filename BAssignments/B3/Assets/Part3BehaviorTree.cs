@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using TreeSharpPlus;
 
-public class Part2BehaviorTree : MonoBehaviour
+public class Part3BehaviorTree : MonoBehaviour
 {
 	public Transform wander1;
 	public Transform wander2;
@@ -15,11 +15,14 @@ public class Part2BehaviorTree : MonoBehaviour
 	public GameObject fightCanvas;
 	public GameObject manualPreFightCanvas;
 	public GameObject manualFightCanvas;
+	public GameObject audienceCanvas;
+	public GameObject tabCanvas;
 
 	public GameObject you;
 
 	public Text fightStatus;
 	bool isFighting = false;
+	bool switchingAllowed = true;
 
 	private BehaviorAgent behaviorAgent;
 	// Use this for initialization
@@ -33,6 +36,7 @@ public class Part2BehaviorTree : MonoBehaviour
 	void ShowInstructions(GameObject instructions) {
 		manualPreFightCanvas.SetActive(false);
 		manualFightCanvas.SetActive (false);
+		audienceCanvas.SetActive (false);
 		if (instructions != null) instructions.SetActive (true);
 	}
 
@@ -50,21 +54,40 @@ public class Part2BehaviorTree : MonoBehaviour
 				you.GetComponent<BodyMecanim> ().NavGoTo (hit.point);
 			}
 		}
-/*
-		if (Input.GetKeyDown (KeyCode.Tab)) {
-			if (you == participant1) SwitchTo (participant2);
-			if (you == participant2) SwitchTo (participant3);
-			if (you == participant3) SwitchTo (participant1);
+
+		GameObject[] clappers = GameObject.FindGameObjectsWithTag("Audience");
+		if (Input.GetKeyDown(KeyCode.Tab) && switchingAllowed) {
+			if (you == participant1)
+				SwitchTo (participant2);
+			else if (you == participant2)
+				SwitchTo (participant3);
+			else if (you == participant3)
+				SwitchTo (clappers [0]);
+			else {
+				for (int i = 0; i < clappers.Length; i++) {
+					if (clappers [i] == you) {
+						if (i < clappers.Length	 - 1)
+							SwitchTo (clappers [i + 1]);
+						else
+							SwitchTo (participant1);
+						break;
+					}
+				}
+			}
 		}
-*/
 	}
 
 	void SwitchTo(GameObject person) {
+		Debug.Log ("Switching");
 		you.transform.Find ("Camera").gameObject.SetActive (false);
 		person.transform.Find ("Camera").gameObject.SetActive (true);
 		you = person;
 	}
 
+	void toggleSwitching(bool enabled) {
+		switchingAllowed = enabled;
+		tabCanvas.SetActive (switchingAllowed);
+	}
 	protected void beginFight(GameObject fighter) {
 		opponent.GetComponent<Fighter> ().UpdateStats();
 		fighter.GetComponent<Fighter> ().UpdateStats();
@@ -91,6 +114,20 @@ public class Part2BehaviorTree : MonoBehaviour
 			clapper.GetComponent<BehaviorMecanim>().ST_PlayHandGesture("CLAP", 1000),
 			clapper.GetComponent<BehaviorMecanim>().ST_PlayHandGesture("HANDSUP", 1000),
 			clapper.GetComponent<BehaviorMecanim>().ST_PlayHandGesture("WAVE", 1000)
+		);
+	}
+
+	protected Node ManualApplaud(GameObject clapper)
+	{
+		return new DecoratorForceStatus(RunStatus.Success,
+			new Sequence(
+				new LeafInvoke( () => { ShowInstructions(audienceCanvas); }),
+				new Selector(
+					new Sequence(new LeafAssert(() => {return Input.GetKey(KeyCode.C);}), clapper.GetComponent<BehaviorMecanim>().ST_PlayHandGesture("CLAP", 1000)),
+					new Sequence(new LeafAssert(() => {return Input.GetKey(KeyCode.H);}), clapper.GetComponent<BehaviorMecanim>().ST_PlayHandGesture("HANDSUP", 1000)),
+					new Sequence(new LeafAssert(() => {return Input.GetKey(KeyCode.W);}), clapper.GetComponent<BehaviorMecanim>().ST_PlayHandGesture("WAVE", 1000))
+				)
+			)
 		);
 	}
 
@@ -137,7 +174,15 @@ public class Part2BehaviorTree : MonoBehaviour
 		return new ForEach<GameObject>(
 			(clapper) =>
 			{
-				return new DecoratorLoop(Applaud(clapper));
+				return new DecoratorLoop(
+					new Selector(
+						new Sequence( 
+							new LeafAssert( () => { return you == clapper; }),
+							ManualApplaud(clapper)
+						),
+						Applaud(clapper)
+					)
+				);
 			}
 			, clappers);
 	}
@@ -202,7 +247,10 @@ public class Part2BehaviorTree : MonoBehaviour
 	protected Node ManualFightSequence(GameObject fighter) {
 		string choice = "";
 		return new Sequence (
-			new LeafInvoke( () => { ShowInstructions(manualFightCanvas); } ),
+			new LeafInvoke( () => { 
+				ShowInstructions(manualFightCanvas);
+				toggleSwitching(false);
+			} ),
 			new DecoratorForceStatus(RunStatus.Success,
 				new DecoratorLoop(
 					new Sequence(
@@ -221,6 +269,9 @@ public class Part2BehaviorTree : MonoBehaviour
 					)
 				)
 			),
+			new LeafInvoke( () => { 
+				toggleSwitching(true);
+			} ),
 			new Selector(
 				new Sequence(new LeafAssert(() => { return choice == "fight"; }), Attack(fighter, opponent)),
 				new Sequence(new LeafAssert(() => { return choice == "defend"; }), Defend(fighter)),
@@ -279,11 +330,8 @@ public class Part2BehaviorTree : MonoBehaviour
 				return you != fighter;
 			}),
 			new SelectorShuffle (
-				new SelectorShuffle (
-					ST_ApproachAndWait (fighter, wander1.transform.position, 1000),
-					ST_ApproachAndWait (fighter, wander2.transform.position, 1000),
-					ST_ApproachAndWait (fighter, wander3.transform.position, 1000)
-				),
+				Applaud(fighter),
+				Applaud(fighter),
 				PowerUp (fighter),
 				Defend (fighter)
 			)
